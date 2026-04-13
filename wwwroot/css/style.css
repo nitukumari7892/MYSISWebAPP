@@ -1,0 +1,143 @@
+﻿/* ===== Reset ===== */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f6fa;
+}
+
+/* ===== CONSTANTS ===== */
+:root {
+    --navbar-height: 70px;
+    --sidebar-width: 240px;
+}
+
+/* ===== Layout ===== */
+.layout {
+    display: flex;
+}
+
+/* ===== NAVBAR ===== */
+.navbar-custom {
+    height: var(--navbar-height);
+    width: 100%;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+    /* Left section (logo + search) */
+    .navbar-custom .left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    /* Right section */
+    .navbar-custom .right {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+/* Logo */
+.logo-img {
+    height: 40px;
+}
+
+/* Avatar */
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    width: var(--sidebar-width);
+    height: calc(100vh - var(--navbar-height));
+    background-color: #b71c1c;
+    color: white;
+    position: fixed;
+    top: var(--navbar-height);
+    left: 0;
+    padding-top: 10px;
+}
+
+    /* Sidebar links */
+    .sidebar .nav {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sidebar .nav-link {
+        color: white;
+        padding: 12px 20px;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+        .sidebar .nav-link:hover {
+            background-color: #8e0000;
+        }
+
+        .sidebar .nav-link.active {
+            background-color: #7f0000;
+        }
+
+/* ===== MAIN ===== */
+.main {
+    margin-left: var(--sidebar-width);
+    margin-top: var(--navbar-height);
+    width: calc(100% - var(--sidebar-width));
+}
+
+/* ===== CONTENT ===== */
+.content {
+    padding: 20px;
+}
+
+/* ===== CARD ===== */
+.card {
+    background: white;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+/* ===== TABLE ===== */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+    .table th,
+    .table td {
+        padding: 10px;
+        border: 1px solid #eee;
+    }
+
+/* ===== FILTERS ===== */
+.filters {
+    display: flex;
+    gap: 10px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+
+    .sidebar {
+        width: 200px;
+    }
+
+    .main {
+        margin-left: 200px;
+    }
+}

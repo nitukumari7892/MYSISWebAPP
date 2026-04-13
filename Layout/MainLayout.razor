@@ -1,0 +1,23 @@
+﻿@using Radzen.Blazor
+@inherits LayoutComponentBase
+
+<div class="layout">
+
+    <Navbar/>
+
+    <Sidebar />
+
+    <div class="main @(sidebarExpanded ? "" : "collapsed")">
+        @Body
+    </div>
+
+</div>
+
+@code {
+    private bool sidebarExpanded = true;
+
+    void ToggleSidebar()
+    {
+        sidebarExpanded = !sidebarExpanded;
+    }
+}

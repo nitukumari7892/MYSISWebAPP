@@ -1,0 +1,26 @@
+﻿@using MySISWeb.Shared.Components
+
+<div class="navbar-custom">
+
+    <!-- Left -->
+    <div class="left">
+        <img src="images/logo.png" class="logo-img" />
+
+        <!-- Reusable Input -->
+        <MySISWeb.Shared.Components.SISInput 
+            @bind-Value="searchText"
+            Placeholder="Name / Reg. No."
+            Icon="rz-icon-search" />
+    </div>
+
+    <!-- Right -->
+    <div class="right">
+        <span class="notification">🔔</span>
+        <img src="images/user.png" class="avatar" />
+    </div>
+
+</div>
+
+@code {
+    private string searchText;
+}

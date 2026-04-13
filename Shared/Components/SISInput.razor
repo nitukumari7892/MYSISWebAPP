@@ -1,0 +1,28 @@
+﻿@using Radzen
+@using Radzen.Blazor
+
+<div class="sis-input-wrapper">
+
+    <RadzenTextBox Value="@Value"
+                   Placeholder="@Placeholder"
+                   Style="width:100%"
+                   ValueChanged="@OnValueChanged" />
+
+</div>
+
+@code {
+
+    [Parameter] public string Value { get; set; }
+
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+
+    [Parameter] public string Placeholder { get; set; }
+
+    [Parameter] public string Icon { get; set; }
+
+    private async Task OnValueChanged(string value)
+    {
+        Value = value;
+        await ValueChanged.InvokeAsync(value);
+    }
+}
