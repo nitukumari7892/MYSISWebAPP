@@ -1,0 +1,115 @@
+﻿@page "/login"
+@using MudBlazor
+@inject NavigationManager Nav
+@inject AuthService AuthService
+@inject IJSRuntime JS
+
+<MudGrid Style="height:100vh">
+
+    <!-- LEFT IMAGE -->
+    <MudItem xs="12" md="7" Style="padding:0">
+        <div style="height:100%;
+            background:url('/wwwroot/images/2_employee.png') center/cover no-repeat;">
+        </div>
+    </MudItem>
+
+    <!-- RIGHT LOGIN -->
+    <MudItem xs="12" md="5" Class="d-flex align-center justify-center">
+
+        <MudPaper Elevation="0" Style="width:350px;">
+
+            <div class="text-center mb-6">
+                <img src="/wwwroot/images/2_employee.png" style="height:60px" />
+                <MudText Typo="Typo.caption">
+                    A Market Leader in Security
+                </MudText>
+            </div>
+
+            <MudTextField @bind-Value="username"
+                          Label="Registration Number"
+                          Variant="Variant.Outlined"
+                          FullWidth="true"
+                          Class="mb-4" />
+
+            <MudTextField @bind-Value="password"
+                          Label="Password"
+                          Variant="Variant.Outlined"
+                          InputType="@(showPassword ? InputType.Text : InputType.Password)"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@Icons.Material.Filled.Visibility"
+                          OnAdornmentClick="TogglePassword"
+                          FullWidth="true"
+                          Class="mb-4" />
+
+            <!-- ERROR -->
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <MudText Color="Color.Error" Class="mb-2">@errorMessage</MudText>
+            }
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Error"
+                       FullWidth="true"
+                       Disabled="@loading"
+                       OnClick="HandleLogin"
+                       Style="height:45px">
+
+                @(loading ? "Logging..." : "LOGIN")
+
+            </MudButton>
+
+            <MudText Align="Align.Center" Class="mt-4">
+                New User?
+                <MudLink Href="#">CREATE NEW ACCOUNT</MudLink>
+            </MudText>
+
+        </MudPaper>
+
+    </MudItem>
+
+</MudGrid>
+
+@code {
+    string username;
+    string password;
+    bool showPassword = false;
+    bool loading = false;
+    string errorMessage;
+
+    void TogglePassword()
+    {
+        showPassword = !showPassword;
+    }
+
+    async Task HandleLogin()
+    {
+        try
+        {
+            loading = true;
+            errorMessage = "";
+
+            var user = await AuthService.Login(new Models.Login.LoginRequest
+            {
+                UserName = username,
+                Password = password
+            });
+
+            // ✅ SAVE TOKEN
+            await JS.InvokeVoidAsync("localStorage.setItem", "token", user.AUTH_TOKEN);
+
+            // ✅ SAVE NAME
+            await JS.InvokeVoidAsync("localStorage.setItem", "name", user.Name);
+
+            // ✅ REDIRECT
+            Nav.NavigateTo("/dashboard", true);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+}

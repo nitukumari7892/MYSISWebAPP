@@ -1,12 +1,15 @@
-﻿@using Radzen
-@using Radzen.Blazor
+﻿@using MudBlazor
 
 <div class="sis-input-wrapper">
 
-    <RadzenTextBox Value="@Value"
-                   Placeholder="@Placeholder"
-                   Style="width:100%"
-                   ValueChanged="@OnValueChanged" />
+    <MudTextField T="string"
+                  Value="@Value"
+                  ValueChanged="OnValueChanged"
+                  Placeholder="@Placeholder"
+                  Variant="Variant.Outlined"
+                  FullWidth="true"
+                  Adornment="Adornment.Start"
+                  AdornmentIcon="@Icon" />
 
 </div>
 

@@ -1,16 +1,16 @@
-﻿@using MySISWeb.Shared.Components
+﻿@using MudBlazor
+@using MySISWeb.Shared.Components
 
 <div class="navbar-custom">
 
     <!-- Left -->
     <div class="left">
-        <img src="images/logo.png" class="logo-img" />
+        <img src="images/logo.png" class="logo-img" style="width:100px;height:70px"/>
 
-        <!-- Reusable Input -->
-        <MySISWeb.Shared.Components.SISInput 
-            @bind-Value="searchText"
-            Placeholder="Name / Reg. No."
-            Icon="rz-icon-search" />
+        @* <!-- Reusable Input -->
+        <SISInput @bind-Value="searchText"
+                  Placeholder="Name / Reg. No."
+                  Icon="@Icons.Material.Filled.Search" /> *@
     </div>
 
     <!-- Right -->

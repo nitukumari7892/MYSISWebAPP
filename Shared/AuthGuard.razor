@@ -1,0 +1,40 @@
+﻿@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+@if (isChecking)
+{
+    <p>Loading...</p>
+}
+else
+{
+    @ChildContent
+}
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    bool isChecking = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var currentUrl = Nav.Uri;
+
+        // ✅ Allow login page
+        if (currentUrl.Contains("/login"))
+        {
+            isChecking = false;
+            return;
+        }
+
+        var token = await JS.InvokeAsync<string>("localStorage.getItem", "token");
+
+        if (string.IsNullOrEmpty(token))
+        {
+            Nav.NavigateTo("/login", true);
+        }
+        else
+        {
+            isChecking = false;
+        }
+    }
+}
