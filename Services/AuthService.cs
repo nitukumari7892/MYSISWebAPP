@@ -18,16 +18,22 @@ public class AuthService
         _http.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/json"));
 
-        var response = await _http.PostAsJsonAsync(
-            "https://10.10.1.94/Web/v2/Rest.svc/Login",
-            request);
+        // ✅ PASS IN HEADERS (as API expects)
+        var httpRequest = new HttpRequestMessage(
+            HttpMethod.Get,
+            "https://mysis.sisersys.com:8444/Web/v3/Rest.svc/Login"
+        );
 
-        var result = await response.Content
-            .ReadFromJsonAsync<ApiResponse<UserData>>();
+        httpRequest.Headers.Add("UserName", request.UserName);
+        httpRequest.Headers.Add("Password", request.Password);
 
-        if (result == null || !result.IsSuccess || result.data == null || result.data.Count == 0)
-            throw new Exception(result?.error ?? "Login failed");
+        var response = await _http.SendAsync(httpRequest);
 
-        return result.data[0];
+        var json = await response.Content.ReadFromJsonAsync<ApiResponse<UserData>>();
+
+        if (json == null || json.status != "true" || json.data == null || json.data.Count == 0)
+            throw new Exception(json?.error ?? "Invalid user credential");
+
+        return json.data[0];
     }
 }
