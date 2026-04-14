@@ -1,4 +1,5 @@
 ﻿@page "/login"
+
 @using MudBlazor
 @inject NavigationManager Nav
 @inject AuthService AuthService
@@ -6,20 +7,18 @@
 
 <MudGrid Style="height:100vh">
 
-    <!-- LEFT IMAGE -->
     <MudItem xs="12" md="7" Style="padding:0">
         <div style="height:100%;
-            background:url('/wwwroot/images/2_employee.png') center/cover no-repeat;">
+            background:url('/images/2_employee.png') center/cover no-repeat;">
         </div>
     </MudItem>
 
-    <!-- RIGHT LOGIN -->
     <MudItem xs="12" md="5" Class="d-flex align-center justify-center">
 
-        <MudPaper Elevation="0" Style="width:350px;">
+        <MudPaper Elevation="4" Style="width:360px; padding:24px; border-radius:12px;">
 
             <div class="text-center mb-6">
-                <img src="/wwwroot/images/2_employee.png" style="height:60px" />
+                <img src="/images/2_employee.png" style="height:60px" />
                 <MudText Typo="Typo.caption">
                     A Market Leader in Security
                 </MudText>
@@ -34,34 +33,35 @@
             <MudTextField @bind-Value="password"
                           Label="Password"
                           Variant="Variant.Outlined"
-                          InputType="@(showPassword ? InputType.Text : InputType.Password)"
+                          InputType="@(showPassword? InputType.Text: InputType.Password)"
                           Adornment="Adornment.End"
-                          AdornmentIcon="@Icons.Material.Filled.Visibility"
+                          AdornmentIcon="@(showPassword? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
                           OnAdornmentClick="TogglePassword"
                           FullWidth="true"
-                          Class="mb-4" />
+                          Class="mb-4"
+                          OnKeyDown="HandleKeyDown" />
 
-            <!-- ERROR -->
             @if (!string.IsNullOrEmpty(errorMessage))
             {
-                <MudText Color="Color.Error" Class="mb-2">@errorMessage</MudText>
+                <MudText Color="Color.Error">@errorMessage</MudText>
             }
 
             <MudButton Variant="Variant.Filled"
                        Color="Color.Error"
                        FullWidth="true"
                        Disabled="@loading"
-                       OnClick="HandleLogin"
-                       Style="height:45px">
+                       OnClick="HandleLogin">
 
-                @(loading ? "Logging..." : "LOGIN")
+                @if (loading)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                }
+                else
+                {
+                    <span>LOGIN</span>
+                }
 
             </MudButton>
-
-            <MudText Align="Align.Center" Class="mt-4">
-                New User?
-                <MudLink Href="#">CREATE NEW ACCOUNT</MudLink>
-            </MudText>
 
         </MudPaper>
 
@@ -72,13 +72,29 @@
 @code {
     string username;
     string password;
-    bool showPassword = false;
-    bool loading = false;
+    bool showPassword;
+    bool loading;
     string errorMessage;
 
-    void TogglePassword()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        showPassword = !showPassword;
+        if (firstRender)
+        {
+            var token = await JS.InvokeAsync<string>("localStorage.getItem", "token");
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                Nav.NavigateTo("/dashboard", true);
+            }
+        }
+    }
+
+    void TogglePassword() => showPassword = !showPassword;
+
+    void HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            _ = HandleLogin();
     }
 
     async Task HandleLogin()
@@ -94,13 +110,8 @@
                 Password = password
             });
 
-            // ✅ SAVE TOKEN
             await JS.InvokeVoidAsync("localStorage.setItem", "token", user.AUTH_TOKEN);
 
-            // ✅ SAVE NAME
-            await JS.InvokeVoidAsync("localStorage.setItem", "name", user.Name);
-
-            // ✅ REDIRECT
             Nav.NavigateTo("/dashboard", true);
         }
         catch (Exception ex)

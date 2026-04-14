@@ -19,7 +19,7 @@ public class AuthService
             new MediaTypeWithQualityHeaderValue("application/json"));
 
         var response = await _http.PostAsJsonAsync(
-            "http://10.10.1.94/Web/v2/Rest.svc/Login",
+            "https://10.10.1.94/Web/v2/Rest.svc/Login",
             request);
 
         var result = await response.Content

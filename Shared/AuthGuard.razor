@@ -17,10 +17,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var currentUrl = Nav.Uri;
+        var url = Nav.Uri;
 
-        // ✅ Allow login page
-        if (currentUrl.Contains("/login"))
+        // ✅ allow login page
+        if (url.Contains("/login"))
         {
             isChecking = false;
             return;
